@@ -328,3 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+*.workspace
+*.pdsbak
+TestJig/VSMDD debug VSMDD1.txt
+TestJig/VSMDigitalDisplay.dll
