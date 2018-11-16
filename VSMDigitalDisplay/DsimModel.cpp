@@ -82,7 +82,7 @@ VOID DsimModel::simulate(ABSTIME time, DSIMMODES mode)
 		}
 	}
 
-	fprintf(mDebugOutFP, "time %20llu R%02x G%02x B%02x H%02x V%02x\n", time , r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
+	fprintf(mDebugOutFP, DsimModel_DEBUG_FORMAT, time , r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
 	fflush(mDebugOutFP);
 }
 

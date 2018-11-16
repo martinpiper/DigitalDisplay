@@ -332,3 +332,4 @@ ASALocalRun/
 *.pdsbak
 TestJig/VSMDD debug VSMDD1.txt
 TestJig/VSMDigitalDisplay.dll
+TestJig/t.bmp

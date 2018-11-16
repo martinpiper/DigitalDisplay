@@ -5,6 +5,8 @@
 
 #define InfoLog(__s__) inst->log(__s__);
 
+#define DsimModel_DEBUG_FORMAT "time %20llu R%02x G%02x B%02x H%02x V%02x\n"
+
 class DsimModel : public IDSIMMODEL
 {
 public:
