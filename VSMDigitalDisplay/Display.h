@@ -15,9 +15,18 @@ public:
 
 	void simulate(const ABSTIME time, const BYTE r , const BYTE g , const BYTE b , const bool hSync , const bool vSync);
 
-	const std::vector<RGBTRIPLE> getPixels()
+	const RGBTRIPLE *getPixels()
 	{
 		return mScreen;
+	}
+
+	const int getWidth()
+	{
+		return mWidth;
+	}
+	const int getHeight()
+	{
+		return mHeight;
 	}
 
 private:
@@ -34,5 +43,5 @@ private:
 	ABSTIME mTimeVSyncStart, mTimeVSyncEnd;
 	ABSTIME mFrameDeltaTime;
 
-	std::vector<RGBTRIPLE> mScreen;
+	RGBTRIPLE *mScreen;
 };

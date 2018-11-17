@@ -1,20 +1,22 @@
 #include "stdafx.h"
 #include "Display.h"
 
-Display::Display()
+Display::Display() : mScreen(0)
 {
 	Resize(0, 0);
 }
 
 Display::~Display()
 {
+	delete mScreen;
 }
 
 void Display::Resize(const int width, const int height)
 {
 	mWidth = width;
 	mHeight = height;
-	mScreen.resize(mWidth * mHeight);
+	delete mScreen;
+	mScreen = new RGBTRIPLE[mWidth * mHeight];
 
 	mPreviousVSync = true;
 	mPreviousHSync = true;
@@ -62,7 +64,7 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 			mTimeVSyncEnd = time;
 
 			// Fill any pixels from the last update
-			while (mLastIndexPlot < (int)mScreen.size())
+			while (mLastIndexPlot < mWidth*mHeight)
 			{
 				mScreen[mLastIndexPlot++] = mLastRGB;
 			}
@@ -100,7 +102,7 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 		int thisIndex = (mCurrentY * mWidth) + mCurrentX;
 
 		// Fill any pixels from the last update
-		while (mLastIndexPlot < thisIndex && mLastIndexPlot < (int)mScreen.size())
+		while (mLastIndexPlot < thisIndex && mLastIndexPlot < mWidth*mHeight)
 		{
 			mScreen[mLastIndexPlot++] = mLastRGB;
 		}
@@ -109,7 +111,7 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 		mLastRGB.rgbtGreen = g;
 		mLastRGB.rgbtBlue = b;
 
-		if (mLastIndexPlot < (int)mScreen.size())
+		if (mLastIndexPlot < mWidth*mHeight)
 		{
 			mScreen[mLastIndexPlot] = mLastRGB;
 		}

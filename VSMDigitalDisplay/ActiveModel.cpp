@@ -4,21 +4,22 @@
 
 VOID ActiveModel::initialize(ICOMPONENT *cpt)
 {
-	component = cpt;
+	mComponent = cpt;
 
-	// Get entire component(-1) origin
 	BOX textbox;
-	cpt->getsymbolarea(-1, &textbox);
+	mComponent->getsymbolarea(-1, &textbox);
 
-	// Do some math to position the readouts properly
-	volts.x = (textbox.left + textbox.right) / 2;
-	volts.y = (textbox.top + textbox.bottom) / 2 - 100;
-	amps.x = (textbox.left + textbox.right) / 2;
-	amps.y = (textbox.top + textbox.bottom) / 2 + 100;
+	mFPSPos.x = textbox.left + 300;
+	mFPSPos.y = textbox.top + 150;
+	mLinesPos.x = textbox.left + 700;
+	mLinesPos.y = textbox.top + 150;
 
-	// Initial readout:
-	strcpy(readout_v, " V00.0");
-	strcpy(readout_a, " A0.00");
+	textstyle = mComponent->createtextstyle((CHAR*)"UM_METER");
+
+	strcpy(mReadoutFPS, "0.0 fps");
+	strcpy(mReadoutLines, "0 lines");
+
+	mDisplay.Resize(256, 256);
 }
 
 ISPICEMODEL *ActiveModel::getspicemodel (CHAR *primitive)
@@ -33,43 +34,50 @@ IDSIMMODEL *ActiveModel::getdsimmodel (CHAR *primitive)
 
 VOID ActiveModel::plot (ACTIVESTATE state)
 {
-	// Draw entire component on the screen
-	component->drawsymbol(-1);
-	// Draw symbol 0 overtop components
-	component->drawsymbol(0);
-	// Place the default readouts on the screen
-	component->drawtext(volts.x, volts.y, 0, TXJ_CENTRE | TXJ_MIDDLE, readout_v);
-	component->drawtext(amps.x, amps.y, 0, TXJ_CENTRE | TXJ_MIDDLE, readout_a);
+	drawElements();
+	drawScreen();
 }
 
-VOID ActiveModel::animate (INT element, ACTIVEDATA *newstate)
+VOID ActiveModel::animate(INT element, ACTIVEDATA *newstate)
+{
+	drawScreen();
+}
+
+void ActiveModel::drawElements(void)
+{
+	mComponent->drawsymbol(-1);
+	mComponent->drawsymbol(0);
+	mComponent->settextcolour(0);
+	mComponent->drawtext(mFPSPos.x, mFPSPos.y, 0, TXJ_CENTRE | TXJ_MIDDLE, mReadoutFPS);
+	mComponent->drawtext(mLinesPos.x, mLinesPos.y, 0, TXJ_CENTRE | TXJ_MIDDLE, mReadoutLines);
+}
+
+void ActiveModel::drawScreen(void)
 {
 	BOX textbox;
-	component->getsymbolarea(-1, &textbox);
-
-	// Draw entire component on the screen
-//	component->drawsymbol(-1);
-	// Draw symbol 0 overtop components
-//	component->drawsymbol(0);
-	// Re-draw the displayed value with the new results
-//	component->drawtext(volts.x, volts.y, 0, TXJ_CENTRE | TXJ_MIDDLE, readout_v);
-//	component->drawtext(amps.x, amps.y, 0, TXJ_CENTRE | TXJ_MIDDLE, readout_a);
+	mComponent->getsymbolarea(-1, &textbox);
 
 	textbox.left += 470;
 	textbox.top += 270;
-	textbox.right -= 250;
-//	textbox.bottom += 300;
-	HDC hdc = component->begincache(textbox);
+	textbox.right -= 280;
+	textbox.bottom -= 170;
+	HDC hdc = mComponent->begincache(textbox);
 
-	int pixels[32 * 32];
-	for (int i = 0; i < 32 * 32; i++)
+	if (!hdc)
 	{
-		pixels[i] = rand();
+		return;
+	}
+
+	int *pixels = new int [sizeof(int) * mDisplay.getWidth() * mDisplay.getHeight()];
+	const RGBTRIPLE *optSourcePixels = &mDisplay.getPixels()[0];
+	int *optDestinationPixels = &pixels[0];
+	for (int i = 0; i < mDisplay.getWidth() * mDisplay.getHeight(); i++)
+	{
+		optDestinationPixels[i] = (optSourcePixels[i].rgbtRed << 16) | (optSourcePixels[i].rgbtGreen << 8) | (optSourcePixels[i].rgbtBlue << 0);
 	}
 
 	BITMAP bm;
-	PAINTSTRUCT ps;
-	HBITMAP bitmap = CreateBitmap(32 , 32 , 1 , 32 , pixels);
+	HBITMAP bitmap = CreateBitmap(mDisplay.getWidth() , mDisplay.getHeight() , 1 , 32 , &pixels[0]);
 
 	HDC hdcMem = CreateCompatibleDC(hdc);
 	HGDIOBJ hbmOld = SelectObject(hdcMem, bitmap);
@@ -80,25 +88,16 @@ VOID ActiveModel::animate (INT element, ACTIVEDATA *newstate)
 
 	HGDIOBJ hBitmap = GetCurrentObject(hdc, OBJ_BITMAP);
 	GetObject(hBitmap, sizeof(bm), &bm);
-	StretchBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, 32 , 32, SRCCOPY);
+	StretchBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, mDisplay.getWidth(), mDisplay.getHeight() , SRCCOPY);
 
 	SelectObject(hdcMem, hbmOld);
 	DeleteDC(hdcMem);
 
 	DeleteObject(bitmap);
 
-#if 0
-	MoveToEx(hDC, volts.x, volts.y, NULL);
-	LineTo(hDC, volts.x+50, volts.y+50);
-	COLORREF color = RGB(255, 0, 0); // COLORREF to hold the color info`
-	for (int i = 0; i < 400; i++)
-	{
-		for (int j = 0; j < 50; j++)
-			SetPixel(hDC, i, j, color);
-	}
-#endif
+	delete pixels;
 
-	component->endcache();
+	mComponent->endcache();
 }
 
 BOOL ActiveModel::actuate (WORD key, INT x, INT y, DWORD flags)

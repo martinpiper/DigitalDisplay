@@ -2,20 +2,21 @@
 #include "DsimModel.h"
 #include <stdio.h>
 #include <string>
+#include "ActiveModel.h"
 
 INT DsimModel::isdigital (CHAR *pinname)
 {
-	return TRUE;							// Indicates this is a digital model
+	return TRUE;
 }
 
 VOID DsimModel::setup (IINSTANCE *instance, IDSIMCKT *dsimckt)
 {
 	mActiveModel = instance->getactivemodel();
-	std::string filename = "VSMDD debug ";
-	filename.append(instance->id());
-	filename.append(".txt");
 
-	mDebugOutFP = fopen(filename.c_str(), "w");
+//	std::string filename = "VSMDD debug ";
+//	filename.append(instance->id());
+//	filename.append(".txt");
+//	mDebugOutFP = fopen(filename.c_str(), "w");
 
 	mInstance = instance;
 	mDigitalComponent = dsimckt;
@@ -83,8 +84,11 @@ VOID DsimModel::simulate(ABSTIME time, DSIMMODES mode)
 		}
 	}
 
-	fprintf(mDebugOutFP, DsimModel_DEBUG_FORMAT, time , r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
-	fflush(mDebugOutFP);
+//	fprintf(mDebugOutFP, DsimModel_DEBUG_FORMAT, time , r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
+//	fflush(mDebugOutFP);
+
+
+	((ActiveModel*)mActiveModel)->getDisplay().simulate(time, r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
 }
 
 VOID DsimModel::callback (ABSTIME time, EVENTID eventid)

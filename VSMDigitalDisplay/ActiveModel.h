@@ -1,6 +1,7 @@
 #pragma once
 #include "StdAfx.h"
 #include "vsm.hpp"
+#include "Display.h"
 
 class ActiveModel : public IACTIVEMODEL
 {
@@ -12,11 +13,21 @@ public:
     VOID animate (INT element, ACTIVEDATA *newstate);
     BOOL actuate (WORD key, INT x, INT y, DWORD flags);
 
+	void drawElements(void);
+	void drawScreen(void);
+
+	Display& getDisplay()
+	{
+		return mDisplay;
+	}
+
 private:
-	ICOMPONENT *component;
-	POINT volts;
-	POINT amps;
+	ICOMPONENT *mComponent;
+	POINT mFPSPos;
+	POINT mLinesPos;
 	HTEXTSTYLE textstyle;
-	CHAR readout_v[10];
-	CHAR readout_a[10];
+	CHAR mReadoutFPS[10];
+	CHAR mReadoutLines[10];
+
+	Display mDisplay;
 };
