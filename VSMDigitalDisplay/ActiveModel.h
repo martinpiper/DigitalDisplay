@@ -11,4 +11,12 @@ public:
     VOID plot (ACTIVESTATE state);
     VOID animate (INT element, ACTIVEDATA *newstate);
     BOOL actuate (WORD key, INT x, INT y, DWORD flags);
+
+private:
+	ICOMPONENT *component;
+	POINT volts;
+	POINT amps;
+	HTEXTSTYLE textstyle;
+	CHAR readout_v[10];
+	CHAR readout_a[10];
 };

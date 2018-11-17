@@ -16,7 +16,7 @@ extern "C" {
 		{
 			key++;
 			char temp[256];
-			sprintf(temp, "Trying %x...", key);
+			sprintf(temp, "Trying1 %x...", key);
 			OutputDebugStringA(temp);
 		}
 		return new DsimModel;
@@ -30,6 +30,15 @@ extern "C" VOID __declspec (dllexport) deletedsimmodel(IDSIMMODEL *model)
 
 extern "C" __declspec(dllexport) IACTIVEMODEL *createactivemodel(CHAR *device, ILICENCESERVER *ils)
 {
+	int key = 0;
+	// Scan for and obtain any suitable key
+	while (!ils->authorize(key))
+	{
+		key++;
+		char temp[256];
+		sprintf(temp, "Trying2 %x...", key);
+		OutputDebugStringA(temp);
+	}
 	return new ActiveModel;
 }
 

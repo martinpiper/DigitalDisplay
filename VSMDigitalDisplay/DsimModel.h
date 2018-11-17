@@ -25,4 +25,6 @@ private:
 	IDSIMPIN *mPinR[8], *mPinG[8], *mPinB[8];
 
 	FILE *mDebugOutFP;
+
+	IACTIVEMODEL *mActiveModel;
 };

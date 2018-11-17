@@ -10,6 +10,7 @@ INT DsimModel::isdigital (CHAR *pinname)
 
 VOID DsimModel::setup (IINSTANCE *instance, IDSIMCKT *dsimckt)
 {
+	mActiveModel = instance->getactivemodel();
 	std::string filename = "VSMDD debug ";
 	filename.append(instance->id());
 	filename.append(".txt");
