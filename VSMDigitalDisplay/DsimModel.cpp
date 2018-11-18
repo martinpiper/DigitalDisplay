@@ -87,8 +87,10 @@ VOID DsimModel::simulate(ABSTIME time, DSIMMODES mode)
 //	fprintf(mDebugOutFP, DsimModel_DEBUG_FORMAT, time , r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
 //	fflush(mDebugOutFP);
 
-
-	((ActiveModel*)mActiveModel)->getDisplay().simulate(time, r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
+	if (mActiveModel)
+	{
+		((ActiveModel*)mActiveModel)->getDisplay().simulate(time, r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
+	}
 }
 
 VOID DsimModel::callback (ABSTIME time, EVENTID eventid)

@@ -14,6 +14,7 @@ public:
     BOOL actuate (WORD key, INT x, INT y, DWORD flags);
 
 	void drawElements(void);
+	void drawText(void);
 	void drawScreen(void);
 
 	Display& getDisplay()
@@ -25,7 +26,6 @@ private:
 	ICOMPONENT *mComponent;
 	POINT mFPSPos;
 	POINT mLinesPos;
-	HTEXTSTYLE textstyle;
 	CHAR mReadoutFPS[10];
 	CHAR mReadoutLines[10];
 

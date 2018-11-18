@@ -5,21 +5,23 @@
 VOID ActiveModel::initialize(ICOMPONENT *cpt)
 {
 	mComponent = cpt;
+	if (!mComponent)
+	{
+		return;
+	}
 
 	BOX textbox;
 	mComponent->getsymbolarea(-1, &textbox);
 
-	mFPSPos.x = textbox.left + 300;
+	mFPSPos.x = textbox.left + 700;
 	mFPSPos.y = textbox.top + 150;
-	mLinesPos.x = textbox.left + 700;
+	mLinesPos.x = textbox.left + 1200;
 	mLinesPos.y = textbox.top + 150;
-
-	textstyle = mComponent->createtextstyle((CHAR*)"UM_METER");
 
 	strcpy(mReadoutFPS, "0.0 fps");
 	strcpy(mReadoutLines, "0 lines");
 
-	mDisplay.Resize(256, 256);
+	mDisplay.Resize(256, 270);
 }
 
 ISPICEMODEL *ActiveModel::getspicemodel (CHAR *primitive)
@@ -40,13 +42,32 @@ VOID ActiveModel::plot (ACTIVESTATE state)
 
 VOID ActiveModel::animate(INT element, ACTIVEDATA *newstate)
 {
+	drawText();
 	drawScreen();
 }
 
 void ActiveModel::drawElements(void)
 {
+	if (!mComponent)
+	{
+		return;
+	}
+
 	mComponent->drawsymbol(-1);
 	mComponent->drawsymbol(0);
+}
+
+void ActiveModel::drawText(void)
+{
+	if (!mComponent)
+	{
+		return;
+	}
+
+	sprintf(mReadoutFPS, "%.1f fps" , 1.0f/realtime(mDisplay.getFrameDeltaTime()));
+	sprintf(mReadoutLines, "%d lines" , mDisplay.getMaxLinesCount());
+
+
 	mComponent->settextcolour(0);
 	mComponent->drawtext(mFPSPos.x, mFPSPos.y, 0, TXJ_CENTRE | TXJ_MIDDLE, mReadoutFPS);
 	mComponent->drawtext(mLinesPos.x, mLinesPos.y, 0, TXJ_CENTRE | TXJ_MIDDLE, mReadoutLines);
@@ -54,6 +75,11 @@ void ActiveModel::drawElements(void)
 
 void ActiveModel::drawScreen(void)
 {
+	if (!mComponent)
+	{
+		return;
+	}
+
 	BOX textbox;
 	mComponent->getsymbolarea(-1, &textbox);
 

@@ -97,7 +97,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(TargetPath) ..\TestJig</Command>
+      <Command>copy /Y $(TargetPath) ..\TestJig &amp;&amp; copy /Y $(TargetPath) ..\..\BombJack</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying output dll</Message>
@@ -118,7 +118,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(TargetPath) ..\TestJig</Command>
+      <Command>copy /Y $(TargetPath) ..\TestJig &amp;&amp; copy /Y $(TargetPath) ..\..\BombJack</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying output dll</Message>
@@ -143,7 +143,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(TargetPath) ..\TestJig</Command>
+      <Command>copy /Y $(TargetPath) ..\TestJig &amp;&amp; copy /Y $(TargetPath) ..\..\BombJack</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying output dll</Message>
@@ -168,7 +168,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y $(TargetPath) ..\TestJig</Command>
+      <Command>copy /Y $(TargetPath) ..\TestJig &amp;&amp; copy /Y $(TargetPath) ..\..\BombJack</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying output dll</Message>

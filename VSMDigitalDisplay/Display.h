@@ -29,6 +29,16 @@ public:
 		return mHeight;
 	}
 
+	const ABSTIME getFrameDeltaTime()
+	{
+		return mFrameDeltaTime;
+	}
+
+	const int getMaxLinesCount()
+	{
+		return mMaxLinesCount;
+	}
+
 private:
 	int mWidth, mHeight;
 	bool mPreviousVSync, mPreviousHSync;
