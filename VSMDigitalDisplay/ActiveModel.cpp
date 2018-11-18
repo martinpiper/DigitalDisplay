@@ -10,6 +10,10 @@ VOID ActiveModel::initialize(ICOMPONENT *cpt)
 		return;
 	}
 
+	int width = atoi(mComponent->getprop((CHAR*)"WIDTH"));
+	int height = atoi(mComponent->getprop((CHAR*)"HEIGHT"));
+	mDisplay.Resize(width, height);
+
 	BOX textbox;
 	mComponent->getsymbolarea(-1, &textbox);
 
@@ -20,8 +24,6 @@ VOID ActiveModel::initialize(ICOMPONENT *cpt)
 
 	strcpy(mReadoutFPS, "0.0 fps");
 	strcpy(mReadoutLines, "0 lines");
-
-	mDisplay.Resize(256, 270);
 }
 
 ISPICEMODEL *ActiveModel::getspicemodel (CHAR *primitive)
@@ -69,8 +71,8 @@ void ActiveModel::drawText(void)
 
 
 	mComponent->settextcolour(0);
-	mComponent->drawtext(mFPSPos.x, mFPSPos.y, 0, TXJ_CENTRE | TXJ_MIDDLE, mReadoutFPS);
-	mComponent->drawtext(mLinesPos.x, mLinesPos.y, 0, TXJ_CENTRE | TXJ_MIDDLE, mReadoutLines);
+	mComponent->drawtext(mFPSPos.x, mFPSPos.y, 0, TXJ_LEFT | TXJ_MIDDLE, mReadoutFPS);
+	mComponent->drawtext(mLinesPos.x, mLinesPos.y, 0, TXJ_LEFT | TXJ_MIDDLE, mReadoutLines);
 }
 
 void ActiveModel::drawScreen(void)
