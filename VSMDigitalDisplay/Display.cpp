@@ -17,6 +17,13 @@ void Display::Resize(const int width, const int height)
 	mHeight = height;
 	delete mScreen;
 	mScreen = new RGBTRIPLE[mWidth * mHeight];
+	srand(0);
+	for (int i = 0; i < mWidth*mHeight; i++)
+	{
+		mScreen[i].rgbtRed = (BYTE)rand();
+		mScreen[i].rgbtGreen = mScreen[i].rgbtRed;
+		mScreen[i].rgbtBlue = mScreen[i].rgbtRed;
+	}
 
 	mPreviousVSync = true;
 	mPreviousHSync = true;
