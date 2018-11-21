@@ -1,0 +1,6 @@
+* If a drawScreen() happens, while single stepping for example, then pixels might not be rendered in precise granular sync until a digital logic chnage is emitted by VSM
+	Consider flushing the Display::simulate() since it might not have received any state update and black (or constant colour) pixels might not be rendered in sync with the single step
+
+
+
+* Add a rotate display 1 to 3 times 90 degrees clockwise option to the device parameters

@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VSMDigitalDisplayTest", "VS
 		{66093F08-8216-478D-9BF1-04DDD30EDAB5} = {66093F08-8216-478D-9BF1-04DDD30EDAB5}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E91B8F7A-8CC4-4DDE-947B-33C709B7D113}"
+	ProjectSection(SolutionItems) = preProject
+		TODO.txt = TODO.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
