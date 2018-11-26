@@ -30,4 +30,6 @@ private:
 	CHAR mReadoutLines[10];
 
 	Display mDisplay;
+
+	int mRotation;
 };

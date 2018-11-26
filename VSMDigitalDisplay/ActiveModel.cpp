@@ -14,6 +14,8 @@ VOID ActiveModel::initialize(ICOMPONENT *cpt)
 	int height = atoi(mComponent->getprop((CHAR*)"HEIGHT"));
 	mDisplay.Resize(width, height);
 
+	mRotation = atoi(mComponent->getprop((CHAR*)"ROTATION"));
+
 	BOX textbox;
 	mComponent->getsymbolarea(-1, &textbox);
 
@@ -96,16 +98,76 @@ void ActiveModel::drawScreen(void)
 		return;
 	}
 
-	int *pixels = new int [sizeof(int) * mDisplay.getWidth() * mDisplay.getHeight()];
+	int sourceWidth = mDisplay.getWidth();
+	int sourceHeight = mDisplay.getHeight();
+
+	int displayWidth = 0, displayHeight = 0;
+	switch (mRotation)
+	{
+	case 0:
+	case 2:
+	default:
+		displayWidth = mDisplay.getWidth();
+		displayHeight = mDisplay.getHeight();
+		break;
+	case 1:
+	case 3:
+		displayWidth = mDisplay.getHeight();
+		displayHeight = mDisplay.getWidth();
+		break;
+	}
+
+	int *pixels = new int [sizeof(int) * displayWidth * displayHeight];
 	const RGBTRIPLE *optSourcePixels = &mDisplay.getPixels()[0];
 	int *optDestinationPixels = &pixels[0];
-	for (int i = 0; i < mDisplay.getWidth() * mDisplay.getHeight(); i++)
+	int i = 0;
+	switch (mRotation)
 	{
-		optDestinationPixels[i] = (optSourcePixels[i].rgbtRed << 16) | (optSourcePixels[i].rgbtGreen << 8) | (optSourcePixels[i].rgbtBlue << 0);
+	case 0:
+	default:
+		for (int y = 0; y < sourceHeight; y++)
+		{
+			for (int x = 0; x < sourceWidth; x++)
+			{
+				optDestinationPixels[x + (y * displayWidth)] = (optSourcePixels[i].rgbtRed << 16) | (optSourcePixels[i].rgbtGreen << 8) | (optSourcePixels[i].rgbtBlue << 0);
+				i++;
+			}
+		}
+		break;
+	case 1:
+		for (int y = sourceHeight-1 ; y >= 0; y--)
+		{
+			for (int x = 0; x < sourceWidth; x++)
+			{
+				optDestinationPixels[y + (x * displayWidth)] = (optSourcePixels[i].rgbtRed << 16) | (optSourcePixels[i].rgbtGreen << 8) | (optSourcePixels[i].rgbtBlue << 0);
+				i++;
+			}
+		}
+		break;
+	case 2:
+		for (int y = sourceHeight - 1; y >= 0; y--)
+		{
+			for (int x = sourceWidth-1; x >= 0; x--)
+			{
+				optDestinationPixels[x + (y * displayWidth)] = (optSourcePixels[i].rgbtRed << 16) | (optSourcePixels[i].rgbtGreen << 8) | (optSourcePixels[i].rgbtBlue << 0);
+				i++;
+			}
+		}
+		break;
+	case 3:
+		for (int y = 0; y < sourceHeight; y++)
+		{
+			for (int x = sourceWidth - 1; x >= 0; x--)
+			{
+				optDestinationPixels[y + (x * displayWidth)] = (optSourcePixels[i].rgbtRed << 16) | (optSourcePixels[i].rgbtGreen << 8) | (optSourcePixels[i].rgbtBlue << 0);
+				i++;
+			}
+		}
+		break;
 	}
 
 	BITMAP bm;
-	HBITMAP bitmap = CreateBitmap(mDisplay.getWidth() , mDisplay.getHeight() , 1 , 32 , &pixels[0]);
+	HBITMAP bitmap = CreateBitmap(displayWidth, displayHeight, 1 , 32 , &pixels[0]);
 
 	HDC hdcMem = CreateCompatibleDC(hdc);
 	HGDIOBJ hbmOld = SelectObject(hdcMem, bitmap);
@@ -116,7 +178,7 @@ void ActiveModel::drawScreen(void)
 
 	HGDIOBJ hBitmap = GetCurrentObject(hdc, OBJ_BITMAP);
 	GetObject(hBitmap, sizeof(bm), &bm);
-	StretchBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, mDisplay.getWidth(), mDisplay.getHeight() , SRCCOPY);
+	StretchBlt(hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, displayWidth, displayHeight, SRCCOPY);
 
 	SelectObject(hdcMem, hbmOld);
 	DeleteDC(hdcMem);
