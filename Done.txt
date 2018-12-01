@@ -1,1 +1,9 @@
 * Added interactive RGB colour choosing switches and debug patterns
+
+
+
+* Add a rotate display 1 to 3 times 90 degrees clockwise option to the device parameters
+
+
+
+* Added a Design7 project that demonstrates a SNES mode 7 type of display, it can rotate, flip, scale a picture.
