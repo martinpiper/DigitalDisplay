@@ -1,2 +1,8 @@
 * If a drawScreen() happens, while single stepping for example, then pixels might not be rendered in precise granular sync until a digital logic chnage is emitted by VSM
 	Consider flushing the Display::simulate() since it might not have received any state update and black (or constant colour) pixels might not be rendered in sync with the single step
+
+	
+	
+* Using the mode 7 test jig, it might be possible to render the distorted/scaled quad as a sprite by detecting when the edges need not be drawn. Then to render pixels to a frame full buffer for later display.
+The frame rate then need not be the limiting factor for drawing frames. The distorted/scaled quad draw could read a list of sprites to draw into the frame buffer.
+
