@@ -6,3 +6,9 @@
 * Using the mode 7 test jig, it might be possible to render the distorted/scaled quad as a sprite by detecting when the edges need not be drawn. Then to render pixels to a frame full buffer for later display.
 The frame rate then need not be the limiting factor for drawing frames. The distorted/scaled quad draw could read a list of sprites to draw into the frame buffer.
 
+
+
+* Mode7 test: Before RXO and RYO on sheets 2/3 reach U9 on sheet 4, need to add in the 16 bits of "x org" and "y org" from Mode7Regs.ptn
+	Will also need the register loads
+	This can then be copied over to the other display board and RAM hooked up
+
