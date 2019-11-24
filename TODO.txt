@@ -12,3 +12,6 @@ The frame rate then need not be the limiting factor for drawing frames. The dist
 	Will also need the register loads
 	This can then be copied over to the other display board and RAM hooked up
 
+
+
+* Interesting to note that the display is over scanning the screen, way beyond the pixels displayed by the original Bomb Jack 2D graphics board
