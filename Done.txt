@@ -7,3 +7,8 @@
 
 
 * Added a Design7 project that demonstrates a SNES mode 7 type of display, it can rotate, flip, scale a picture.
+
+
+
+* Option to record each full frame to files
+	ImageMagick can then convert to a video/gif etc

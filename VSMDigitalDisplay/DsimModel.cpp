@@ -4,22 +4,26 @@
 #include <string>
 #include "ActiveModel.h"
 
+//#define GENERATE_DEBUG
+
 INT DsimModel::isdigital (CHAR *pinname)
 {
 	return TRUE;
 }
 
-VOID DsimModel::setup (IINSTANCE *instance, IDSIMCKT *dsimckt)
+VOID DsimModel::setup(IINSTANCE *instance, IDSIMCKT *dsimckt)
 {
 	mActiveModel = instance->getactivemodel();
-
-//	std::string filename = "VSMDD debug ";
-//	filename.append(instance->id());
-//	filename.append(".txt");
-//	mDebugOutFP = fopen(filename.c_str(), "w");
-
 	mInstance = instance;
 	mDigitalComponent = dsimckt;
+
+#ifdef GENERATE_DEBUG
+	std::string filename = "VSMDD debug ";
+	filename.append(instance->id());
+	filename.append(".txt");
+	mDebugOutFP = fopen(filename.c_str(), "w");
+#endif
+
 	int i;
 	for (i = 0; i < 8; i++)
 	{
@@ -36,6 +40,20 @@ VOID DsimModel::setup (IINSTANCE *instance, IDSIMCKT *dsimckt)
 
 	mPinHSYNC = mInstance->getdsimpin((CHAR*)"_HSYNC", true);
 	mPinVSYNC = mInstance->getdsimpin((CHAR*)"_VSYNC", true);
+
+	CHAR *t = mInstance->getstrval((CHAR*)"FRAMES");
+	if (t)
+	{
+		std::string filename = t;
+
+		t = mInstance->getstrval((CHAR*)"FRAMESDEBUG");
+		bool writeFrames = atoi(t) ? true : false;
+
+		if (mActiveModel && writeFrames && !filename.empty())
+		{
+			((ActiveModel*)mActiveModel)->getDisplay().setDebugFramesFilename(filename);
+		}
+	}
 }
 
 VOID DsimModel::runctrl (RUNMODES mode)
@@ -84,8 +102,10 @@ VOID DsimModel::simulate(ABSTIME time, DSIMMODES mode)
 		}
 	}
 
-//	fprintf(mDebugOutFP, DsimModel_DEBUG_FORMAT, time , r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
-//	fflush(mDebugOutFP);
+#ifdef GENERATE_DEBUG
+	fprintf(mDebugOutFP, DsimModel_DEBUG_FORMAT, time , r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
+	fflush(mDebugOutFP);
+#endif
 
 	if (mActiveModel)
 	{

@@ -43,6 +43,9 @@ void Display::Resize(const int width, const int height)
 	mLastRGB.rgbtRed = 0;
 	mLastRGB.rgbtGreen = 0;
 	mLastRGB.rgbtBlue = 0;
+
+	mGotFrame = false;
+	mFrameNumber = 0;
 }
 
 void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYTE b, const bool hSync, const bool vSync)
@@ -62,6 +65,10 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 		mLastRGB.rgbtRed = 0;
 		mLastRGB.rgbtGreen = 0;
 		mLastRGB.rgbtBlue = 0;
+		if (mGotFrame && !mDebugFramesFilename.empty())
+		{
+			writeImageFrame();
+		}
 	}
 	else if (mPreviousVSync && !vSync)
 	{
@@ -75,6 +82,7 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 			{
 				mScreen[mLastIndexPlot++] = mLastRGB;
 			}
+			mGotFrame = true;
 		}
 	}
 
@@ -126,4 +134,44 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 
 	mPreviousHSync = hSync;
 	mPreviousVSync = vSync;
+}
+
+void Display::writeImageFrame(void)
+{
+	std::string filename = mDebugFramesFilename;
+	char number[10];
+	sprintf(number, "%08d", mFrameNumber);
+	filename += number;
+	filename += ".bmp";
+
+	// 256x256x24bit BMP header
+	unsigned char data[54] = {
+		0x42, 0x4D, 0x36, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
+		0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	};
+
+	data[0x12] = mWidth & 255;
+	data[0x13] = (mWidth>>8) & 255;
+	data[0x14] = (mWidth >> 16) & 255;
+	data[0x15] = (mWidth >> 24) & 255;
+
+	data[0x16] = mHeight & 255;
+	data[0x17] = (mHeight >> 8) & 255;
+	data[0x18] = (mHeight >> 16) & 255;
+	data[0x19] = (mHeight >> 24) & 255;
+
+	FILE *fp = fopen(filename.c_str(), "wb");
+	fwrite(data, 1, sizeof(data), fp);
+	for (int i = 0; i < mWidth*mHeight; i++)
+	{
+		fputc(mScreen[i].rgbtBlue, fp);
+		fputc(mScreen[i].rgbtGreen, fp);
+		fputc(mScreen[i].rgbtRed, fp);
+	}
+
+	fclose(fp);
+
+	mFrameNumber++;
 }

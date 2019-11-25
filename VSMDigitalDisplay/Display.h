@@ -2,6 +2,7 @@
 #include "StdAfx.h"
 #include "vsm.hpp"
 #include <vector>
+#include <string>
 
 #pragma warning(disable : 4251)
 
@@ -39,6 +40,11 @@ public:
 		return mMaxLinesCount;
 	}
 
+	void setDebugFramesFilename(const std::string filename)
+	{
+		mDebugFramesFilename = filename;
+	}
+
 private:
 	int mWidth, mHeight;
 	bool mPreviousVSync, mPreviousHSync;
@@ -54,4 +60,10 @@ private:
 	ABSTIME mFrameDeltaTime;
 
 	RGBTRIPLE *mScreen;
+
+	std::string mDebugFramesFilename;
+	bool mGotFrame;
+	int mFrameNumber;
+
+	void writeImageFrame(void);
 };
