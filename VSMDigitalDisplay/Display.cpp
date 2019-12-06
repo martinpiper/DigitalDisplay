@@ -164,11 +164,15 @@ void Display::writeImageFrame(void)
 
 	FILE *fp = fopen(filename.c_str(), "wb");
 	fwrite(data, 1, sizeof(data), fp);
-	for (int i = 0; i < mWidth*mHeight; i++)
+	// Write out bottom to top
+	for (int y = mHeight - 1; y >= 0; y--)
 	{
-		fputc(mScreen[i].rgbtBlue, fp);
-		fputc(mScreen[i].rgbtGreen, fp);
-		fputc(mScreen[i].rgbtRed, fp);
+		for (int x = 0; x < mWidth; x++)
+		{
+			fputc(mScreen[x + (y*mWidth)].rgbtBlue, fp);
+			fputc(mScreen[x + (y*mWidth)].rgbtGreen, fp);
+			fputc(mScreen[x + (y*mWidth)].rgbtRed, fp);
+		}
 	}
 
 	fclose(fp);
