@@ -11,7 +11,8 @@ The frame rate then need not be the limiting factor for drawing frames. The dist
 * Mode7 test: Before RXO and RYO on sheets 2/3 reach U9 on sheet 4, need to add in the 16 bits of "x org" and "y org" from Mode7Regs.ptn
 	Will also need the register loads
 	This can then be copied over to the other display board and RAM hooked up
-
+	Added a "map tile" display area, seems to work well.
+	
 
 
 * Interesting to note that the display is over scanning the screen, way beyond the pixels displayed by the original Bomb Jack 2D graphics board
