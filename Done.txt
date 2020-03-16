@@ -12,3 +12,7 @@
 
 * Option to record each full frame to files
 	ImageMagick can then convert to a video/gif etc
+
+	
+	
+* Mode7 test now used four sets of map and tile memory with suitable interleaved four pixel step timing. This means slow memory does not impact the graphics output as each pixel has longer to setup the memory lines.
