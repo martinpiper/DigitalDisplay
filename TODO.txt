@@ -12,6 +12,10 @@ The frame rate then need not be the limiting factor for drawing frames. The dist
 	Will also need the register loads
 	This can then be copied over to the other display board and RAM hooked up
 	Added a "map tile" display area, seems to work well.
+		If the U43 to U9 chain is too slow, then consider adding 2 or 4 paths based on the horizontal pixel position and longer address time latching for the output pixels
+		In the situation where they are RAMS, it would be possible to tie their data loads all together of course
+	* RXO and RYO would need to have an extra 4 bits to really make use of the tile map
+
 	
 
 
