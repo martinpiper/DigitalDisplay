@@ -1,3 +1,7 @@
+* Add a frame number indicator, useful for knowing what output file has been written
+
+
+
 * If a drawScreen() happens, while single stepping for example, then pixels might not be rendered in precise granular sync until a digital logic change is emitted by VSM
 	Consider flushing the Display::simulate() since it might not have received any state update and black (or constant colour) pixels might not be rendered in sync with the single step
 
