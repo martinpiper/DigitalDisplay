@@ -39,6 +39,7 @@ void Display::Resize(const int width, const int height)
 	mTimeVSyncStart = -1;
 	mTimeVSyncEnd = -1;
 	mFrameDeltaTime = 0;
+	mFilterSignals = 0;
 
 	mLastRGB.rgbtRed = 0;
 	mLastRGB.rgbtGreen = 0;
@@ -112,6 +113,15 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 
 	if (hSync && vSync && mLineDeltaTime > 0)
 	{
+		ABSTIME pixelDrawtimeDelta = time - mLastPixelDrawTime;
+		if (pixelDrawtimeDelta > 0 && pixelDrawtimeDelta < mFilterSignals && mLastIndexPlot > 0)
+		{
+			// Rewind to resubmit the last very recent update, try to filter out signal deltas due to very short hi to lo or lo to hi variances
+			mLastIndexPlot--;
+			mLastRGB = mScreen[mLastIndexPlot];
+		}
+		mLastPixelDrawTime = time;
+
 		mCurrentX = (int) ((mWidth * (time - mTimeHSyncStart)) / mLineDeltaTime);
 
 		int thisIndex = (mCurrentY * mWidth) + mCurrentX;

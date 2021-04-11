@@ -45,6 +45,11 @@ public:
 		mDebugFramesFilename = filename;
 	}
 
+	void setFilterSignals(const ABSTIME time)
+	{
+		mFilterSignals = time;
+	}
+
 private:
 	int mWidth, mHeight;
 	bool mPreviousVSync, mPreviousHSync;
@@ -58,6 +63,8 @@ private:
 	ABSTIME mLineDeltaTime;
 	ABSTIME mTimeVSyncStart, mTimeVSyncEnd;
 	ABSTIME mFrameDeltaTime;
+	ABSTIME mLastPixelDrawTime;
+	ABSTIME mFilterSignals;
 
 	RGBTRIPLE *mScreen;
 

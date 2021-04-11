@@ -54,6 +54,13 @@ VOID DsimModel::setup(IINSTANCE *instance, IDSIMCKT *dsimckt)
 			((ActiveModel*)mActiveModel)->getDisplay().setDebugFramesFilename(filename);
 		}
 	}
+
+	DOUBLE filterTime;
+	mInstance->getnumval(&filterTime, (CHAR*)"FILTERSIGNALS");
+	if (mActiveModel)
+	{
+		((ActiveModel*)mActiveModel)->getDisplay().setFilterSignals(dsimtime(filterTime));
+	}
 }
 
 VOID DsimModel::runctrl (RUNMODES mode)

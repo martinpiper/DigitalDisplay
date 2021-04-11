@@ -16,3 +16,7 @@
 	
 	
 * Mode7 test now used four sets of map and tile memory with suitable interleaved four pixel step timing. This means slow memory does not impact the graphics output as each pixel has longer to setup the memory lines.
+
+
+
+* Add a new display "filter signals shorter than" option to the digital display: 5ns should be good enough, or 0.000000005 seconds.
