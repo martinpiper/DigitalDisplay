@@ -47,6 +47,12 @@ void Display::Resize(const int width, const int height)
 
 	mGotFrame = false;
 	mFrameNumber = 0;
+
+	mHaveSyncDisplayWarningHSYNC = false;
+	mHaveSyncDisplayWarningVSYNC = false;
+
+	mSyncDataDisplay = false;
+	mSyncDataWarning = false;
 }
 
 void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYTE b, const bool hSync, const bool vSync)
@@ -89,14 +95,29 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 
 	if (!mPreviousHSync && hSync)
 	{
+		// In this special debug mode the data is visible in the sync period, +HSync end of visible portion of screen
+		if (mSyncDataDisplay && mTimeHSyncStart >= 0)
+		{
+			mTimeHSyncEnd = time;
+			mLineDeltaTime = mTimeHSyncEnd - mTimeHSyncStart;
+			if (mLineDeltaTime > 0)
+			{
+				mCurrentY++;
+				if (mCurrentY > mMaxLinesCount)
+				{
+					mMaxLinesCount = mCurrentY;
+				}
+			}
+		}
+
 		// HSync start of visible portion of screen
 		mTimeHSyncStart = time;
 		mCurrentX = 0;
 	}
 	else if (mPreviousHSync && !hSync)
 	{
-		// HSync end of visible portion of screen
-		if (mTimeHSyncStart >= 0)
+		// Not in debug mode, -HSync end of visible portion of screen
+		if (!mSyncDataDisplay && mTimeHSyncStart >= 0)
 		{
 			mTimeHSyncEnd = time;
 			mLineDeltaTime = mTimeHSyncEnd - mTimeHSyncStart;
@@ -111,7 +132,8 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 		}
 	}
 
-	if (hSync && vSync && mLineDeltaTime > 0)
+	// Depending on the debug display mode, choose to output data during the sync or not...
+	if ((!mSyncDataDisplay && hSync && vSync && mLineDeltaTime > 0) || (mSyncDataDisplay && mLineDeltaTime > 0 && mTimeVSyncStart > 0))
 	{
 		ABSTIME pixelDrawtimeDelta = time - mLastPixelDrawTime;
 		if (pixelDrawtimeDelta > 0 && pixelDrawtimeDelta < mFilterSignals && mLastIndexPlot > 0)
@@ -141,6 +163,16 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 			mScreen[mLastIndexPlot] = mLastRGB;
 		}
 	}
+
+	if (mSyncDataWarning && !hSync && (r > 0 || g > 0 || b > 0))
+	{
+		mHaveSyncDisplayWarningHSYNC = true;
+	}
+	if (mSyncDataWarning && !vSync && (r > 0 || g > 0 || b > 0))
+	{
+		mHaveSyncDisplayWarningVSYNC = true;
+	}
+
 
 	mPreviousHSync = hSync;
 	mPreviousVSync = vSync;

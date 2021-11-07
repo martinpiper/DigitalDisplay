@@ -61,6 +61,18 @@ VOID DsimModel::setup(IINSTANCE *instance, IDSIMCKT *dsimckt)
 	{
 		((ActiveModel*)mActiveModel)->getDisplay().setFilterSignals(dsimtime(filterTime));
 	}
+
+	BOOL bvalue = mInstance->getboolval((CHAR*)"SYNCDATADISPLAY");
+	if (mActiveModel)
+	{
+		((ActiveModel*)mActiveModel)->getDisplay().setSyncDataDisplay(bvalue);
+	}
+
+	bvalue = mInstance->getboolval((CHAR*)"SYNCDATAWARNING");
+	if (mActiveModel)
+	{
+		((ActiveModel*)mActiveModel)->getDisplay().setSyncDataWarning(bvalue);
+	}
 }
 
 VOID DsimModel::runctrl (RUNMODES mode)
@@ -117,6 +129,17 @@ VOID DsimModel::simulate(ABSTIME time, DSIMMODES mode)
 	if (mActiveModel)
 	{
 		((ActiveModel*)mActiveModel)->getDisplay().simulate(time, r, g, b, ishigh(mPinHSYNC->istate()), ishigh(mPinVSYNC->istate()));
+
+		bool gotDisplayWarning = ((ActiveModel*)mActiveModel)->getDisplay().getSyncDisplayWarningHSYNC();
+		if (gotDisplayWarning)
+		{
+			mInstance->warning((CHAR*)"Display detected data during _HSYNC");
+		}
+		gotDisplayWarning = ((ActiveModel*)mActiveModel)->getDisplay().getSyncDisplayWarningVSYNC();
+		if (gotDisplayWarning)
+		{
+			mInstance->warning((CHAR*)"Display detected data during _VSYNC");
+		}
 	}
 }
 

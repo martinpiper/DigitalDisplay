@@ -50,6 +50,29 @@ public:
 		mFilterSignals = time;
 	}
 
+	void setSyncDataDisplay(const bool value)
+	{
+		mSyncDataDisplay = value;
+	}
+
+	void setSyncDataWarning(const bool value)
+	{
+		mSyncDataWarning = value;
+	}
+
+	bool getSyncDisplayWarningHSYNC(void)
+	{
+		bool ret = mHaveSyncDisplayWarningHSYNC;
+		mHaveSyncDisplayWarningHSYNC = false;
+		return ret;
+	}
+	bool getSyncDisplayWarningVSYNC(void)
+	{
+		bool ret = mHaveSyncDisplayWarningHSYNC;
+		mHaveSyncDisplayWarningHSYNC = false;
+		return ret;
+	}
+
 private:
 	int mWidth, mHeight;
 	bool mPreviousVSync, mPreviousHSync;
@@ -71,6 +94,11 @@ private:
 	std::string mDebugFramesFilename;
 	bool mGotFrame;
 	int mFrameNumber;
+
+	bool mSyncDataDisplay;
+	bool mSyncDataWarning;
+	bool mHaveSyncDisplayWarningHSYNC;
+	bool mHaveSyncDisplayWarningVSYNC;
 
 	void writeImageFrame(void);
 };
