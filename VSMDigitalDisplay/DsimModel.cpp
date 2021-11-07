@@ -62,7 +62,13 @@ VOID DsimModel::setup(IINSTANCE *instance, IDSIMCKT *dsimckt)
 		((ActiveModel*)mActiveModel)->getDisplay().setFilterSignals(dsimtime(filterTime));
 	}
 
-	BOOL bvalue = mInstance->getboolval((CHAR*)"SYNCDATADISPLAY");
+	BOOL bvalue = mInstance->getboolval((CHAR*)"SYNCDATAWHOLE");
+	if (mActiveModel)
+	{
+		((ActiveModel*)mActiveModel)->getDisplay().setSyncDataWhole(bvalue);
+	}
+
+	bvalue = mInstance->getboolval((CHAR*)"SYNCDATADISPLAY");
 	if (mActiveModel)
 	{
 		((ActiveModel*)mActiveModel)->getDisplay().setSyncDataDisplay(bvalue);

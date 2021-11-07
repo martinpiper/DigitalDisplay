@@ -51,6 +51,7 @@ void Display::Resize(const int width, const int height)
 	mHaveSyncDisplayWarningHSYNC = false;
 	mHaveSyncDisplayWarningVSYNC = false;
 
+	mSyncDataWhole = false;
 	mSyncDataDisplay = false;
 	mSyncDataWarning = false;
 }
@@ -95,8 +96,8 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 
 	if (!mPreviousHSync && hSync)
 	{
-		// In this special debug mode the data is visible in the sync period, +HSync end of visible portion of screen
-		if (mSyncDataDisplay && mTimeHSyncStart >= 0)
+		// In this special debug mode the data is used across the whole sync period, +HSync end of visible portion of screen
+		if (mSyncDataWhole && mTimeHSyncStart >= 0)
 		{
 			mTimeHSyncEnd = time;
 			mLineDeltaTime = mTimeHSyncEnd - mTimeHSyncStart;
@@ -117,7 +118,7 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 	else if (mPreviousHSync && !hSync)
 	{
 		// Not in debug mode, -HSync end of visible portion of screen
-		if (!mSyncDataDisplay && mTimeHSyncStart >= 0)
+		if (!mSyncDataWhole && mTimeHSyncStart >= 0)
 		{
 			mTimeHSyncEnd = time;
 			mLineDeltaTime = mTimeHSyncEnd - mTimeHSyncStart;

@@ -50,6 +50,11 @@ public:
 		mFilterSignals = time;
 	}
 
+	void setSyncDataWhole(const bool value)
+	{
+		mSyncDataWhole = value;
+	}
+
 	void setSyncDataDisplay(const bool value)
 	{
 		mSyncDataDisplay = value;
@@ -95,6 +100,7 @@ private:
 	bool mGotFrame;
 	int mFrameNumber;
 
+	bool mSyncDataWhole;
 	bool mSyncDataDisplay;
 	bool mSyncDataWarning;
 	bool mHaveSyncDisplayWarningHSYNC;
