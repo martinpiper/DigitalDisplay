@@ -7,7 +7,7 @@
 #include "DsimModel.h"
 #include <stdio.h>
 
-static int key = 1;
+static int key = 0x80808081;
 
 extern "C" {
 	IDSIMMODEL __declspec (dllexport) *createdsimmodel(CHAR *device, ILICENCESERVER *ils)

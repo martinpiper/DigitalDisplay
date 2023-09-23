@@ -23,7 +23,7 @@
     <ProjectGuid>{66093F08-8216-478D-9BF1-04DDD30EDAB5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>VSMDigitalDisplay</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
