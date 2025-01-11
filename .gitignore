@@ -333,3 +333,4 @@ ASALocalRun/
 TestJig/VSMDD debug VSMDD1.txt
 TestJig/VSMDigitalDisplay.dll
 TestJig/t.bmp
+*.bmp

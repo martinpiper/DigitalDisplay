@@ -56,7 +56,11 @@ VOID DsimModel::setup(IINSTANCE *instance, IDSIMCKT *dsimckt)
 	}
 
 	DOUBLE filterTime;
+#if VSM_API_VERSION >= 200
+	filterTime = mInstance->getnumval((CHAR*)"FILTERSIGNALS");
+#else
 	mInstance->getnumval(&filterTime, (CHAR*)"FILTERSIGNALS");
+#endif
 	if (mActiveModel)
 	{
 		((ActiveModel*)mActiveModel)->getDisplay().setFilterSignals(dsimtime(filterTime));

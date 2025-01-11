@@ -190,7 +190,7 @@ void ActiveModel::drawScreen(void)
 	mComponent->endcache();
 }
 
-BOOL ActiveModel::actuate (WORD key, INT x, INT y, DWORD flags)
+BOOL ActiveModel::actuate (KEYCODE key, INT x, INT y, DWORD flags)
 {
 	return FALSE;
 }

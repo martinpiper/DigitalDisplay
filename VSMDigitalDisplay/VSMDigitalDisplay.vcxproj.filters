@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\V2">
+      <UniqueIdentifier>{5c9e3312-03c9-43f6-b53f-c59c242782f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -32,6 +35,9 @@
     </ClInclude>
     <ClInclude Include="Display.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PrivateWork\VSMSDK\V2\vsm.hpp">
+      <Filter>Header Files\V2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
