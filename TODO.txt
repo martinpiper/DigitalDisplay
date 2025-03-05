@@ -24,3 +24,8 @@ The frame rate then need not be the limiting factor for drawing frames. The dist
 
 
 * Interesting to note that the display is over scanning the screen, way beyond the pixels displayed by the original Bomb Jack 2D graphics board
+
+
+
+
+* External process that display a floating window for the display. Network communication instead of rendering in the Proteus window.
