@@ -91,7 +91,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\VSMDigitalDisplay;..\..\PrivateWork\VSMSDK</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReplicaNet\ReplicaNetPublic\Includes;..\VSMDigitalDisplay;..\..\PrivateWork\VSMSDK</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,7 +107,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\VSMDigitalDisplay;..\..\PrivateWork\VSMSDK</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReplicaNet\ReplicaNetPublic\Includes;..\VSMDigitalDisplay;..\..\PrivateWork\VSMSDK</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,7 +125,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\VSMDigitalDisplay;..\..\PrivateWork\VSMSDK</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReplicaNet\ReplicaNetPublic\Includes;..\VSMDigitalDisplay;..\..\PrivateWork\VSMSDK</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,7 +145,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\VSMDigitalDisplay;..\..\PrivateWork\VSMSDK</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReplicaNet\ReplicaNetPublic\Includes;..\VSMDigitalDisplay;..\..\PrivateWork\VSMSDK</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

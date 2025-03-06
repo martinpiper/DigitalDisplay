@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "RNXPSockets/Inc/XPSockets.h"
+
 #pragma warning(disable : 4251)
 
 class DLLEXPORT Display
@@ -78,6 +80,13 @@ public:
 		return ret;
 	}
 
+	void setAddress(const char *address)
+	{
+		mAddressSet = mAddress.Import(address);
+	}
+
+	bool parseMessage(const char *message);
+
 private:
 	int mWidth, mHeight;
 	bool mPreviousVSync, mPreviousHSync;
@@ -107,4 +116,8 @@ private:
 	bool mHaveSyncDisplayWarningVSYNC;
 
 	void writeImageFrame(void);
+
+	bool mAddressSet;
+	RNReplicaNet::XPAddress mAddress;
+	RNReplicaNet::XPSocket mConnectTo;
 };

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Display.h"
 
-Display::Display() : mScreen(0)
+Display::Display() : mScreen(0) , mAddressSet(false)
 {
 	Resize(0, 0);
 }
@@ -56,8 +56,54 @@ void Display::Resize(const int width, const int height)
 	mSyncDataWarning = false;
 }
 
+bool Display::parseMessage(const char* textMessage)
+{
+	RNReplicaNet::DynamicMessageHelper message;
+	if (!message.ReadAsHex(textMessage))
+	{
+		return false;
+	}
+
+	message.SetSize(0);
+
+	ABSTIME time;
+	BYTE r, g, b;
+	bool hSync, vSync;
+	message >> time;
+	message >> r;
+	message >> g;
+	message >> b;
+	message >> hSync;
+	message >> vSync;
+
+	simulate(time, r, g, b, hSync, vSync);
+
+	return true;
+}
+
 void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYTE b, const bool hSync, const bool vSync)
 {
+	if (mAddressSet)
+	{
+		mAddressSet = false;
+		mConnectTo.Create();
+		mConnectTo.Connect(mAddress);
+	}
+	if (mConnectTo.IsAlive())
+	{
+		RNReplicaNet::DynamicMessageHelper message;
+		message << time;
+		message << r;
+		message << g;
+		message << b;
+		message << hSync;
+		message << vSync;
+		std::string toSend = message.DumpAsHex(false) + "\n";
+		if (mConnectTo.Send(toSend.c_str() , toSend.length()) == XPSOCK_EERROR)
+		{
+			mConnectTo.Close();
+		}
+	}
 	if (!mPreviousVSync && vSync)
 	{
 		// VSync start of visible portion of screen

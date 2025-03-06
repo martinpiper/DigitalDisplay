@@ -8,14 +8,16 @@
 #include "ExternalDisplay.h"
 #include "ExternalDisplayDlg.h"
 #include "afxdialogex.h"
+#include "RNXPSockets/Inc/XPSockets.h"
+#include "RNPlatform/Inc/Thread.h"
+#include "RNPlatform/Inc/ThreadClass.h"
+#include "RNPlatform/Inc/StringUtils.h"
+#include "Display.h"
+#include "RNPlatform/Inc/SysTime.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#endif
-
-// If M_PI doesn't exist then define it now
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
 #endif
 
 // CAboutDlg dialog used for App About
@@ -72,51 +74,112 @@ BEGIN_MESSAGE_MAP(CExternalDisplayDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 // Allocate some memory for the "pretend screen" data
-static void* screen = 0;
 static int screenWidth = 0 , screenHeight = 0;
+static int screenWidthSubPixel = 0;
+static Display theDisplay;
+static RNReplicaNet::SysTime theTime;
 
-
-void InitScreen(int width, int height)
+static RNReplicaNet::XPSocket listenSocket;
+static HWND safeHWND = 0;
+class NetworkHandler : public RNReplicaNet::ThreadClass , public RNReplicaNet::Thread
 {
+public:
+	NetworkHandler()
+	{
+
+	}
+	virtual ~NetworkHandler()
+	{
+
+	}
+
+	virtual int ThreadEntry(void)
+	{
+		std::string receivedData;
+		RNReplicaNet::XPSocket* currentConnection = 0;
+		while (!GetTerminated())
+		{
+			RNReplicaNet::XPSocket* gotConnection = listenSocket.Accept();
+			if (gotConnection)
+			{
+				if (currentConnection)
+				{
+					currentConnection->Close();
+					delete currentConnection;
+				}
+				currentConnection = gotConnection;
+			}
+
+			while (!receivedData.empty())
+			{
+				size_t pos = receivedData.find_first_of("\r\n");
+				if (std::string::npos != pos)
+				{
+					std::string line = receivedData.substr(0, pos);
+					receivedData = receivedData.erase(0, pos+1);
+					line = RNReplicaNet::TrimWhite(line);
+					if (!line.empty())
+					{
+						if (theDisplay.parseMessage(line.c_str()))
+						{
+							if (theTime.FloatTime() > 0.01f)
+							{
+								theTime.Reset();
+								::PostMessage(safeHWND, WM_USERRESPONSE, 0, 0);
+							}
+						}
+					}
+				}
+				else
+				{
+					break; // No full data line yet
+				}
+			}
+
+			if (currentConnection)
+			{
+				if (currentConnection->IsAlive())
+				{
+					char receiveBuffer[10240];
+					int received = currentConnection->Recv(receiveBuffer , sizeof(receiveBuffer)-1);
+					if (received > 0)
+					{
+						receiveBuffer[received] = '\0';
+						receivedData += receiveBuffer;
+						continue; // Quickly try to receive all data and any connections, without any sleeping
+					}
+					else if (received == XPSOCK_EERROR)
+					{
+						currentConnection->Close();
+					}
+				}
+				else
+				{
+					delete currentConnection;
+					currentConnection = 0;
+				}
+			}
+
+			Sleep(1);
+		}
+		return 0;
+	}
+};
+static NetworkHandler networkHandler;
+
+
+void InitScreen(int width, int height, int subPixelX)
+{
+	screenWidthSubPixel = subPixelX;
 	screenWidth = width;
 	screenHeight = height;
-	screen = malloc(screenWidth * screenHeight * 4);
-	int x, y;
-	int* pixel = (int*)screen;
-#if 0
-	// Pretty pattern
-	for (y = 0; y < screenHeight; y++)
-	{
-		// Defines a repeating sin wave for each y position
-		int offset = (int)(256.0f * sin(M_PI * float((y) & 255) / 256.0f));
 
-		// Store different pixel colours for each horizontal screen position
-		for (x = 0; x < screenWidth; x++)
-		{
-			*pixel++ = RGB(
-				(x + offset) & 255,
-				(y + x) & 255,
-				((((x) & 255) * ((y) & 65535)) >> 8) & 255
-			);
-		}
-	}
-#else
-	// Snow
-	for (y = 0; y < screenHeight; y++)
-	{
-		for (x = 0; x < screenWidth; x++)
-		{
-			if (rand() & 1)
-			{
-				*pixel++ = RGB(0,0,0);
-			}
-			else
-			{
-				*pixel++ = RGB(255, 255, 255);
-			}
-		}
-	}
-#endif
+	theDisplay.Resize(screenWidth * screenWidthSubPixel, screenHeight);
+
+	listenSocket.Create();
+	listenSocket.Listen(7654);
+
+	networkHandler.Begin(&networkHandler);
 }
 
 
@@ -152,6 +215,8 @@ BOOL CExternalDisplayDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	ShowWindow(SW_NORMAL);
+
+	safeHWND = GetSafeHwnd();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -196,12 +261,31 @@ void CExternalDisplayDlg::OnPaint()
 	{
 		CPaintDC theDC(this); // device context for painting
 
-		CRect rect;
+		CRect fullRect , rect;
+		GetClientRect(&fullRect);
 		GetClientRect(&rect);
+		if (rect.bottom < 48)
+		{
+			return;
+		}
+		rect.bottom -= 32;
+
+
+		int* pixels = new int[sizeof(int) * theDisplay.getWidth() * theDisplay.getHeight()];
+		const RGBTRIPLE* optSourcePixels = theDisplay.getPixels();
+		int i = 0;
+		for (int y = 0; y < theDisplay.getHeight(); y++)
+		{
+			for (int x = 0; x < theDisplay.getWidth(); x++)
+			{
+				pixels[i] = (optSourcePixels[i].rgbtRed << 16) | (optSourcePixels[i].rgbtGreen << 8) | (optSourcePixels[i].rgbtBlue << 0);
+				i++;
+			}
+		}
 
 		CBitmap bmp;
 		// Creates a bitmap with data from the "screen" we have just calculated
-		bmp.CreateBitmap(screenWidth, screenHeight, 1, 32, screen);
+		bmp.CreateBitmap(theDisplay.getWidth(), theDisplay.getHeight(), 1, 32, pixels);
 
 		// Create an in-memory DC compatible with the
 		// display DC we're using to paint
@@ -236,15 +320,17 @@ void CExternalDisplayDlg::OnPaint()
 
 		if (mFlagErase)
 		{
-			theDC.FillSolidRect(0, 0, rect.right, rect.bottom, 0);
+			theDC.FillSolidRect(0, 32, fullRect.right, fullRect.bottom, 0);
 			mFlagErase = false;
 		}
 
 		// Now blit the in memory DC to the window DC
 		theDC.SetStretchBltMode(COLORONCOLOR);
-		theDC.StretchBlt(0, 0, targetWidth, targetHeight, &dcMemory, 0, 0, screenWidth, screenHeight, SRCCOPY);
+		theDC.StretchBlt(0, 32, targetWidth, targetHeight, &dcMemory, 0, 0, screenWidth * screenWidthSubPixel, screenHeight, SRCCOPY);
 
 		dcMemory.SelectObject(pOldBitmap);
+
+		delete pixels;
 
 		CDialogEx::OnPaint();
 	}

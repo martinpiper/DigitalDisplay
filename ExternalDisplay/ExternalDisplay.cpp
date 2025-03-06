@@ -50,7 +50,7 @@ BOOL CExternalDisplayApp::InitInstance()
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
-	InitScreen(384, 264);
+	InitScreen(384, 264, 4);
 
 	CWinApp::InitInstance();
 

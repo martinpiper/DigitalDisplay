@@ -83,6 +83,16 @@ VOID DsimModel::setup(IINSTANCE *instance, IDSIMCKT *dsimckt)
 	{
 		((ActiveModel*)mActiveModel)->getDisplay().setSyncDataWarning(bvalue);
 	}
+
+	t = mInstance->getstrval((CHAR*)"EXTERNALDISPLAYADDRESS");
+	if (t)
+	{
+		if (mActiveModel && strlen(t) > 0)
+		{
+			((ActiveModel*)mActiveModel)->getDisplay().setAddress(t);
+		}
+	}
+
 }
 
 VOID DsimModel::runctrl (RUNMODES mode)

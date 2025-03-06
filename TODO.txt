@@ -29,3 +29,13 @@ The frame rate then need not be the limiting factor for drawing frames. The dist
 
 
 * External process that display a floating window for the display. Network communication instead of rendering in the Proteus window.
+	>> To get debug output from the Proteus display model:
+		wsl
+		cd /mnt/c/work/DigitalDisplay/ExternalDisplay
+		netcat -l 7654
+		netcat -l 7654 >DebugData_ExampleDisplay.txt
+	>> EXTERNALDISPLAYADDRESS
+	>> To send the example debug data:
+		C:\Work\ReplicaNetWork\TestPacketRaw\Debug\TestPacketRaw.exe t 127.0.0.1 7654 n @"C:\Work\DigitalDisplay\ExternalDisplay\DebugData_ExampleDisplay.txt"
+	>> To view the external display:
+		c:\work\DigitalDisplay\Release\ExternalDisplay.exe

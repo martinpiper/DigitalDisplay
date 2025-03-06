@@ -6,7 +6,7 @@
 
 #define WM_USERRESPONSE WM_APP
 
-void InitScreen(int width, int height);
+void InitScreen(int width, int height, int subPixelX);
 
 // CExternalDisplayDlg dialog
 class CExternalDisplayDlg : public CDialogEx
