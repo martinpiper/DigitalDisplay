@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CExternalDisplayDlg, CDialogEx)
 	ON_WM_ERASEBKGND()
 	ON_WM_SIZE()
 	ON_MESSAGE(WM_USERRESPONSE, &CExternalDisplayDlg::OnUserresponse)
+	ON_BN_CLICKED(IDC_BUTTON1, &CExternalDisplayDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 // Allocate some memory for the "pretend screen" data
@@ -369,4 +370,11 @@ afx_msg LRESULT CExternalDisplayDlg::OnUserresponse(WPARAM wParam, LPARAM lParam
 	// A trigger message from receiving digital signals to cause a redraw
 	RedrawWindow();
 	return 0;
+}
+
+
+void CExternalDisplayDlg::OnBnClickedButton1()
+{
+	theDisplay.CreateSnow();
+	RedrawWindow();
 }

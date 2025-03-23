@@ -15,6 +15,7 @@ public:
 	virtual ~Display();
 
 	void Resize(const int width, const int height);
+	void CreateSnow(void);
 
 	void simulate(const ABSTIME time, const BYTE r , const BYTE g , const BYTE b , const bool hSync , const bool vSync);
 

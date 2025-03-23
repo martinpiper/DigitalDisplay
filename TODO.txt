@@ -39,3 +39,8 @@ The frame rate then need not be the limiting factor for drawing frames. The dist
 		C:\Work\ReplicaNetWork\TestPacketRaw\Debug\TestPacketRaw.exe t 127.0.0.1 7654 n @"C:\Work\DigitalDisplay\ExternalDisplay\DebugData_ExampleDisplay.txt"
 	>> To view the external display:
 		c:\work\DigitalDisplay\Release\ExternalDisplay.exe
+
+
+
+* Transient signals at the start of pixels... Perhaps overwrite the last pixel if the newer signals are within that time period.
+	Or... Should the pixel latch or edge of screen latch timing be shifted so that the middle of the pixel is used?

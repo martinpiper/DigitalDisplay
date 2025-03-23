@@ -12,6 +12,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VSMDigitalDisplayTest", "VS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E91B8F7A-8CC4-4DDE-947B-33C709B7D113}"
 	ProjectSection(SolutionItems) = preProject
+		Done.txt = Done.txt
 		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject

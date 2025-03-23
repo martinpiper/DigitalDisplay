@@ -18,12 +18,7 @@ void Display::Resize(const int width, const int height)
 	delete mScreen;
 	mScreen = new RGBTRIPLE[mWidth * mHeight];
 	srand(0);
-	for (int i = 0; i < mWidth*mHeight; i++)
-	{
-		mScreen[i].rgbtRed = (BYTE)rand();
-		mScreen[i].rgbtGreen = mScreen[i].rgbtRed;
-		mScreen[i].rgbtBlue = mScreen[i].rgbtRed;
-	}
+	CreateSnow();
 
 	mPreviousVSync = true;
 	mPreviousHSync = true;
@@ -54,6 +49,16 @@ void Display::Resize(const int width, const int height)
 	mSyncDataWhole = false;
 	mSyncDataDisplay = false;
 	mSyncDataWarning = false;
+}
+
+void Display::CreateSnow(void)
+{
+	for (int i = 0; i < mWidth * mHeight; i++)
+	{
+		mScreen[i].rgbtRed = (BYTE)rand();
+		mScreen[i].rgbtGreen = mScreen[i].rgbtRed;
+		mScreen[i].rgbtBlue = mScreen[i].rgbtRed;
+	}
 }
 
 bool Display::parseMessage(const char* textMessage)

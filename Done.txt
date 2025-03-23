@@ -20,3 +20,7 @@
 
 
 * Add a new display "filter signals shorter than" option to the digital display: 5ns should be good enough, or 0.000000005 seconds.
+
+
+
+* Button to clear/randomise display
