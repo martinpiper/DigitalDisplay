@@ -72,6 +72,7 @@ BEGIN_MESSAGE_MAP(CExternalDisplayDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_MESSAGE(WM_USERRESPONSE, &CExternalDisplayDlg::OnUserresponse)
 	ON_BN_CLICKED(IDC_BUTTON1, &CExternalDisplayDlg::OnBnClickedButton1)
+	ON_WM_KEYDOWN()
 END_MESSAGE_MAP()
 
 // Allocate some memory for the "pretend screen" data
@@ -377,4 +378,16 @@ void CExternalDisplayDlg::OnBnClickedButton1()
 {
 	theDisplay.CreateSnow();
 	RedrawWindow();
+}
+
+BOOL CExternalDisplayDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam == VK_ESCAPE)
+		{
+			return TRUE;                // Do not process escape key
+		}
+	}
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

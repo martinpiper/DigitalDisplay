@@ -43,4 +43,5 @@ protected:
 	afx_msg LRESULT OnUserresponse(WPARAM wParam, LPARAM lParam);
 public:
 	afx_msg void OnBnClickedButton1();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

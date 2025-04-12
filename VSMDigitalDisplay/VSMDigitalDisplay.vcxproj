@@ -174,8 +174,14 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\PrivateWork\VSMSDK\V2\vsm.hpp" />
-    <ClInclude Include="..\..\PrivateWork\VSMSDK\vsm.hpp" />
+    <ClInclude Include="..\..\PrivateWork\VSMSDK\V2\vsm.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\PrivateWork\VSMSDK\vsm.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="ActiveModel.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="DsimModel.h" />

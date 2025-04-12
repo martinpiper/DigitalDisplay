@@ -3,7 +3,7 @@
 #include "vsm.hpp"
 #include "Display.h"
 
-#ifndef KEYCODE
+#if VSM_API_VERSION < 200
 #define KEYCODE WORD
 #endif
 
@@ -15,7 +15,7 @@ public:
     IDSIMMODEL *getdsimmodel (CHAR *primitive);
     VOID plot (ACTIVESTATE state);
     VOID animate (INT element, ACTIVEDATA *newstate);
-    BOOL actuate (KEYCODE key, INT x, INT y, DWORD flags);
+	BOOL actuate (KEYCODE key, INT x, INT y, DWORD flags);
 
 	void drawElements(void);
 	void drawText(void);

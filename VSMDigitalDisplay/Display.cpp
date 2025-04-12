@@ -104,7 +104,7 @@ void Display::simulate(const ABSTIME time, const BYTE r, const BYTE g, const BYT
 		message << hSync;
 		message << vSync;
 		std::string toSend = message.DumpAsHex(false) + "\n";
-		if (mConnectTo.Send(toSend.c_str() , toSend.length()) == XPSOCK_EERROR)
+		if (mConnectTo.Send(toSend.c_str() , (int) toSend.length()) == XPSOCK_EERROR)
 		{
 			mConnectTo.Close();
 		}
